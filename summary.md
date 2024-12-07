@@ -51,3 +51,27 @@ db.test.aggregate([
     *}
 
 //6-3 $group , $sum , $push aggregation stage
+db.test.aggregate([
+    //group hobe:science group,arts group,commerce group
+    //stage-1
+    // {$group: { _id: "$"}}------>syntax;group korte hole _id must takte hobe
+    // {$group: { _id: "$gender"}}   //same gender nie 1t group
+    // {$group: { _id: "$Country"}}   //same country nie 1t group
+
+    // {$group: { _id: "$address"}}
+    // {$group: { _id: "$address.country"}}
+    // {$group: { _id: "$age"}}
+    // {$group: { _id: "$age",count: {$sum: 1}}}  //same age er koijon ase seigolo sum kore dekabe
+
+    // {$group: { _id: "$gender",count: {$sum: 1}}}  //same gender er koijon ase seigolo sum kore dekabe
+    
+    //to add extra value use $push
+    // {$group: { _id: "$gender",amakeDekao:{$push: "$name"}}
+    // {$group: { _id: "$address.country",amakeDekao:{$push: "$name"}}
+    // {$group: { _id: "$address.country",amakeDekao:{$push: "$$ROOT"}}
+    {$group: { _id: "$address.country",fullDocument:{$push: "$$ROOT"}}
+    
+    //stage-2--->fullDocument teke frontend e ja kiso dekano hobe
+    {$project: {"fullDocument.name":1,"fullDocument.gender":1,"fullDocument.email":1}}
+    
+    ])
