@@ -75,3 +75,35 @@ db.test.aggregate([
     {$project: {"fullDocument.name":1,"fullDocument.gender":1,"fullDocument.email":1}}
     
     ])
+
+//6-4 explore more about $group & $project
+db.test.aggregate([
+    
+    //stage-1
+    // {$group: { _id: "$"}}      //syntax
+    // {$group: { _id: "null"}}
+    {$group: { 
+        _id: null,
+        totalSalary:{$sum: "$salary"}, //sobar salary sum kore dekabe
+        maxSalary:{$max: "$salary"},
+        minSalary:{$min: "$salary"},
+        avgSalary:{$avg: "$salary"}
+    }
+    }
+    
+    //stage-2
+    {$project: {
+        totalSalary:1,
+        maxSalary:1,
+        minSalary:1,
+
+        //avgSalary:1  I want to change name of avgSalary
+        averageSalary :"$avgSalary",
+
+        // rangeBtwnnMinMax:{$subtract: ["$maxSalary","$minSalary"]}
+        //"errmsg" : "PlanExecutor error during aggregation :: caused by :: can't $subtract int from string",
+        
+        rangeBtwnnMinMax:{$subtract: [{"$toInt":"$maxSalary"},{"$toInt":"$minSalary"}]}
+        
+    }}
+    ])
