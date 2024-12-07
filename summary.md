@@ -49,3 +49,5 @@ db.test.aggregate([
     db.test.aggregate()
     
     *}
+
+//6-3 $group , $sum , $push aggregation stage
