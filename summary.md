@@ -47,16 +47,16 @@ db.test.aggregate([
     //db.test2.find([]).project({gender:1,name:1,eduTech:1})
     // db.test2.find([])
     db.test.aggregate()
-    
+
     *}
 
 //6-3 $group , $sum , $push aggregation stage
 db.test.aggregate([
     //group hobe:science group,arts group,commerce group
     //stage-1
-    // {$group: { _id: "$"}}------>syntax;group korte hole _id must takte hobe
-    // {$group: { _id: "$gender"}}   //same gender nie 1t group
-    // {$group: { _id: "$Country"}}   //same country nie 1t group
+    // {$group: { \_id: "$"}}------>syntax;group korte hole _id must takte hobe
+    // {$group: { \_id: "$gender"}}   //same gender nie 1t group
+    // {$group: { \_id: "$Country"}} //same country nie 1t group
 
     // {$group: { _id: "$address"}}
     // {$group: { _id: "$address.country"}}
@@ -64,25 +64,25 @@ db.test.aggregate([
     // {$group: { _id: "$age",count: {$sum: 1}}}  //same age er koijon ase seigolo sum kore dekabe
 
     // {$group: { _id: "$gender",count: {$sum: 1}}}  //same gender er koijon ase seigolo sum kore dekabe
-    
+
     //to add extra value use $push
     // {$group: { _id: "$gender",amakeDekao:{$push: "$name"}}
     // {$group: { _id: "$address.country",amakeDekao:{$push: "$name"}}
     // {$group: { _id: "$address.country",amakeDekao:{$push: "$$ROOT"}}
     {$group: { _id: "$address.country",fullDocument:{$push: "$$ROOT"}}
-    
+
     //stage-2--->fullDocument teke frontend e ja kiso dekano hobe
     {$project: {"fullDocument.name":1,"fullDocument.gender":1,"fullDocument.email":1}}
-    
+
     ])
 
 //6-4 explore more about $group & $project
 db.test.aggregate([
-    
+
     //stage-1
     // {$group: { _id: "$"}}      //syntax
     // {$group: { _id: "null"}}
-    {$group: { 
+    {$group: {
         _id: null,
         totalSalary:{$sum: "$salary"}, //sobar salary sum kore dekabe
         maxSalary:{$max: "$salary"},
@@ -90,7 +90,7 @@ db.test.aggregate([
         avgSalary:{$avg: "$salary"}
     }
     }
-    
+
     //stage-2
     {$project: {
         totalSalary:1,
@@ -102,8 +102,34 @@ db.test.aggregate([
 
         // rangeBtwnnMinMax:{$subtract: ["$maxSalary","$minSalary"]}
         //"errmsg" : "PlanExecutor error during aggregation :: caused by :: can't $subtract int from string",
-        
+
         rangeBtwnnMinMax:{$subtract: [{"$toInt":"$maxSalary"},{"$toInt":"$minSalary"}]}
-        
+
     }}
     ])
+
+//6-5 Explore $group with $unwind aggregation stage
+
+db.test.aggregate([
+//stage-1
+{
+// $unwind: "$friends"
+$unwind: "$interests" //unwind use kore array er element goloke seperate || partitioning kora hosse,
+}
+
+//stage-2
+// {
+// $group: { _id: "$friends" }
+// }
+
+    // {
+    //     // $group: { _id: "$friends",count:{$sum: 1} }
+    //     // $group: { _id: "$interests",count:{$sum: 1} }
+    //     $group: { _id: "$age",interestPerAge:{$push: "$intersets"}}
+    // }
+    {
+        $group: { _id: "$age",interestPerAge:{$push: "$interests"}}
+        // $group: { _id: "$age",interestPerAge:{$push: "$intersets"}} here u write intersets
+    }
+
+])
