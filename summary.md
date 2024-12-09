@@ -131,5 +131,37 @@ $unwind: "$interests" //unwind use kore array er element goloke seperate || part
         $group: { _id: "$age",interestPerAge:{$push: "$interests"}}
         // $group: { _id: "$age",interestPerAge:{$push: "$intersets"}} here u write intersets
     }
-
 ])
+
+//6-6 $bucket, $sort, and $limit aggregation stage
+db.test.aggregate([
+    //stage-1
+    {
+        $bucket: {
+            groupBy:"$age",
+            boundaries:[20,30,50,80],
+            default:"80 er uporer briddo golo",
+            output:{
+                count:{$sum:1},
+                //jara jara ase taderke dekao,so use push
+                // karaKaraAse:{$push:"$name"}
+                karaKaraAse:{$push:"$$ROOT"} //$$ROOT use for show all document
+            }
+        }
+    },
+    //db.test2.find([]).sort({ age:-1 }).project({name:1,age:1})
+    //stage-2:sorting
+    {
+        $sort:{age:1}
+        // $sort:{count:1}
+    },
+    //stage-3:jaderke dekabo
+    {
+        $project: {count:1,age:1}
+        // $project: {age:1}
+    },
+    //stage-4:koiti item dekabo tar limit kore dibo
+    {
+        $limit: 2
+    }
+    ])
