@@ -199,3 +199,33 @@ db.test.aggregate([
     }
     
     ])
+
+
+
+    //6-8 $lookup stage, embedding vs referencing
+    //https://github.com/Apollo-Level2-Web-Dev/mongodb-practice/blob/main/practice-orders.json
+// db.orders.find({})
+db.orders.aggregate([
+    {
+        $lookup: {
+            //   from: "<collection to join>",
+               from: "test", //kon collection teke data collect hobe sei collectioner name
+            //   localField: "<field from the input documents>",
+               localField: "userId", //j collection e kaj korsi seta hobe localField
+            //   foreignField: "<field from the documents of the from collection>", 
+               foreignField: "_id", //onno collection teke data anle seta hobe foreignField
+            //   as: "<output array field>"
+            //   as: "sohel" //j name dekte chai
+               as: "userInfo" //j name dekte chai
+             }
+    }
+    ])
+    /*
+    1.embeded data
+    2.reference data
+    3.lookup 2t collectioner er data add kore dei.
+    3a.from use for kon collection e ami lookup chalabo
+    3b.amar filed konti(db.orders.aggregate([]) aikane ami running asi)
+    3c.ami kon filed teke data anbo (from: "test",foreignField: "_id")
+    3d.as use for ki name ami data dekabo seta likhbo
+    */
