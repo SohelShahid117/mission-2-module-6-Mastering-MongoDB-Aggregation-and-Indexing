@@ -237,3 +237,12 @@ db.orders.aggregate([
 // db.test.find({"email" : "wlavenso@photobucket.com"}).explain("executionStats")
 // db.massive_data_collection.find()
 db.getCollection("massive_data_collection").createIndex({email:1})
+
+
+//6-10 Explore compound index and text index
+// db.getCollection("massive_data_collection").createIndex({mail:1})
+// db.getCollection("massive_data_collection").dropIndex({mail:1})
+// db.massive_data_collection.find({gender:"Female",age:35})
+// db.getCollection("massive_data_collection").createIndex({about:"text"})
+// db.getCollection("massive_data_collection").find({$text: { $search: "" }})
+db.getCollection("massive_data_collection").find({$text: { $search: "dolor" }}).project({about:1})
