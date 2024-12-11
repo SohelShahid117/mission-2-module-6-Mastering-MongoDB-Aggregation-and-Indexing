@@ -229,3 +229,11 @@ db.orders.aggregate([
     3c.ami kon filed teke data anbo (from: "test",foreignField: "_id")
     3d.as use for ki name ami data dekabo seta likhbo
     */
+
+  //6-9 What is indexing, COLLSCAN vs IXSCAN
+// db.test.find({"_id" : ObjectId("6406ad64fc13ae5a4000008b")})
+// db.test.find({"_id" : ObjectId("6406ad64fc13ae5a4000008b")}).explain()
+// db.test.find({"_id" : ObjectId("6406ad64fc13ae5a4000008b")}).explain("executionStats")
+// db.test.find({"email" : "wlavenso@photobucket.com"}).explain("executionStats")
+// db.massive_data_collection.find()
+db.getCollection("massive_data_collection").createIndex({email:1})
